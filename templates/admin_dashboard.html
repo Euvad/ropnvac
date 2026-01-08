@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Tableau de Bord Admin{% endblock %}
+{% block content %}
+<h2 style="color: #1a1a2e; text-align: center; margin-bottom: 2rem;">👨‍💼 Tableau de Bord Admin</h2>
+<div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); overflow-x: auto;">
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white;">
+        <th style="padding: 1rem; text-align: left; font-weight: 600;">ID</th>
+        <th style="padding: 1rem; text-align: left; font-weight: 600;">Prénom</th>
+        <th style="padding: 1rem; text-align: left; font-weight: 600;">Nom</th>
+        <th style="padding: 1rem; text-align: left; font-weight: 600;">Grade</th>
+        <th style="padding: 1rem; text-align: left; font-weight: 600;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr style="border-bottom: 1px solid #e0e0e0; transition: all 0.3s ease;" onMouseOver="this.style.backgroundColor='#f8f9ff';" onMouseOut="this.style.backgroundColor='white';">
+        <td style="padding: 1rem; color: #333;">{{ user.id }}</td>
+        <td style="padding: 1rem; color: #333;">{{ user.name }}</td>
+        <td style="padding: 1rem; color: #333;">{{ user.surname }}</td>
+        <td style="padding: 1rem; color: #333;"><strong>{{ user.rank }}</strong></td>
+        <td style="padding: 1rem;"><a href="/admin/user/{{ user.id }}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(102,126,234,0.3);" onMouseOver="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 12px rgba(102,126,234,0.5)';" onMouseOut="this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(102,126,234,0.3)';">Modifier</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

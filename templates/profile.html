@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Mon Profil{% endblock %}
+{% block content %}
+<div style="max-width: 500px; margin: 2rem auto;">
+  <h2 style="color: #1a1a2e; text-align: center;">Mon Profil</h2>
+  <form method="post" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Prénom (lecture seule)</label>
+      <input name="name" value="{{ user.name }}" readonly style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; background: #f5f5f5; color: #999;">
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">RIO (lecture seule)</label>
+      <input name="rio" value="{{ user.rio }}" readonly style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; background: #f5f5f5; color: #999;">
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Nom</label>
+      <input name="surname" value="{{ user.surname }}" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;" onFocus="this.style.borderColor='#0066cc'; this.style.boxShadow='0 0 0 3px rgba(0,102,204,0.1)';" onBlur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Grade</label>
+      <select name="rank" style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; background: white;">
+        <option {% if user.rank=='PA' %}selected{% endif %}>PA</option>
+        <option {% if user.rank=='GPX' %}selected{% endif %}>GPX</option>
+      </select>
+    </div>
+    <div style="margin-bottom: 2rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Date du contrat signé (AAAA-MM-JJ)</label>
+      <input name="date_limit" type="date" value="{{ user.date_limit }}" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;" onFocus="this.style.borderColor='#0066cc'; this.style.boxShadow='0 0 0 3px rgba(0,102,204,0.1)';" onBlur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+    </div>
+    <button type="submit" style="background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%); color: white; padding: 0.75rem 2rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.5s ease; box-shadow: 0 4px 15px rgba(0,102,204,0.4);" onMouseOver="this.style.transform='scale(1.02)'; this.style.boxShadow='0 6px 20px rgba(0,102,204,0.6)';" onMouseOut="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(0,102,204,0.4)';">Enregistrer le profil</button>
+  </form>
+</div>
+{% endblock %}

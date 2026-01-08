@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Calendrier{% endblock %}
+{% block content %}
+
+<p style="margin-bottom: 1.5rem; color: #666;">Plage sélectionnable: <strong>{{ start }}</strong> — <strong>{{ end }}</strong></p>
+
+<div class="month-controls" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+  <button id="prev-month" type="button" aria-label="Mois précédent" style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;" onMouseOver="this.style.transform='scale(1.05)';" onMouseOut="this.style.transform='scale(1)';">◀</button>
+  <select id="month-select" aria-label="Sélectionner un mois" style="padding: 0.5rem 1rem; border: 2px solid #e0e0e0; border-radius: 6px; cursor: pointer; font-weight: 500; background: white;"></select>
+  <button id="next-month" type="button" aria-label="Mois suivant" style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;" onMouseOver="this.style.transform='scale(1.05)';" onMouseOut="this.style.transform='scale(1)';">▶</button>
+  <span style="flex: 1;"></span>
+  <div class="quota" style="color: #666; font-size: 0.95rem;">Utilisé cette année contractuelle: <strong>{{ used_count }}</strong> / 90 — Restant: <strong style="color: #10b981;">{{ remaining }}</strong></div>
+  <button id="save" style="padding: 0.5rem 1.5rem; background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,102,204,0.3);" onMouseOver="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,102,204,0.5)';" onMouseOut="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,102,204,0.3)';">Enregistrer les sélections</button>
+  <span id="status" style="margin-left: 1rem; color: #0066cc; font-weight: 600;"></span>
+</div>
+
+<div id="calendar-root" class="calendar-root" aria-live="polite" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);"></div>
+
+<style>
+  @keyframes selectPulse {
+    0% {
+      transform: scale(0.95);
+      opacity: 0.8;
+    }
+    50% {
+      transform: scale(1.08);
+      box-shadow: 0 0 30px rgba(16,185,129,0.6), inset 0 0 20px rgba(16,185,129,0.2);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .calendar-grid-month { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
+  .weekday-header { font-weight: 700; text-align: center; padding: 0.75rem; background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%); color: white; border-radius: 6px; }
+  .cal-cell { min-height: 80px; border: 2px solid #e0e0e0; border-radius: 8px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.5rem; cursor: pointer; transition: all 0.3s ease; }
+  .cal-cell:hover { border-color: #0066cc; box-shadow: 0 4px 12px rgba(0,102,204,0.2); }
+  .cal-cell.empty { background: transparent; border: none; cursor: default; }
+  .day-num { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; }
+  .day-name { font-size: 0.8rem; color: #999; margin-top: 0.25rem; }
+  .disponible-label { font-size: 0.65rem; color: white; margin-top: 0.35rem; font-weight: 600; }
+  .cal-cell.selected { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-color: #10b981; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+  .cal-cell.selected .day-name { color: rgba(255,255,255,0.8); }
+  .cal-cell.disabled { opacity: 0.4; cursor: not-allowed; }
+  .cal-cell.pulse { animation: selectPulse 0.5s ease-out; }
+</style>
+
+<script>
+  const START = '{{ start }}';
+  const END = '{{ end }}';
+  const SELECTED = {{ selected|tojson }};
+</script>
+<script src="/static/calendar.js"></script>
+{% endblock %}

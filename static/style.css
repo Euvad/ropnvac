@@ -1,0 +1,16 @@
+body{font-family:Segoe UI,Arial,sans-serif;margin:20px}
+header{display:flex;justify-content:space-between;align-items:center}
+.flashes{color:#900}
+.range{margin-bottom:6px}
+.month-controls{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.month-controls .spacer{flex:1}
+.calendar-root{max-width:900px}
+.calendar-grid-month{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.weekday-header{font-weight:600;text-align:center;padding:6px;background:#efefef;border-radius:4px}
+.cal-cell{min-height:64px;border:1px solid #ddd;border-radius:6px;background:white;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px}
+.cal-cell.empty{background:transparent;border:none}
+.day-num{font-size:1.1rem;font-weight:600}
+.day-name{font-size:0.75rem;color:#666}
+.cal-cell.selected{background:#1976d2;color:white;border-color:#1976d2}
+.cal-cell.disabled{opacity:0.45}
+.controls{margin-top:10px}

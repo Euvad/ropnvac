@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <title>ROPN - {% block title %}Police Nationale - Réserve Opérationnelle{% endblock %}</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      input[name="csrf_token"], #csrf-token { display: none !important; }
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      #page-loader { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.95); display: none; align-items: center; justify-content: center; z-index: 9999; }
+      #page-loader.show { display: flex; }
+      .loader-spinner { width: 50px; height: 50px; border: 4px solid #e0e0e0; border-top: 4px solid #0066cc; border-radius: 50%; animation: spin 1s linear infinite; }
+      header { background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%); color: #1a1a2e; padding: 1rem 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 2rem; }
+      header img { height: 80px; width: auto; object-fit: contain; flex-shrink: 0; }
+      header h1 { font-size: 2rem; margin-bottom: 1rem; font-weight: 700; letter-spacing: 1px; color: #1a1a2e; }
+      nav { display: flex; gap: 2rem; flex-wrap: wrap; }
+      nav a { color: #1a1a2e; text-decoration: none; font-weight: 600; transition: all 0.5s ease; padding: 0.75rem 1.5rem; border-radius: 8px; background: rgba(0, 102, 204, 0.1); border: 2px solid #0066cc; }
+      nav a:hover { background: #0066cc; color: white; transform: scale(1.04); box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3); text-decoration: none; }
+      main { max-width: 1200px; margin: 3rem auto; padding: 0 1rem; }
+      .flashes { list-style: none; margin-bottom: 2rem; }
+      .flashes li { background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%); color: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,102,204,0.3); margin-bottom: 0.5rem; font-weight: 500; }
+      h2, h3 { color: #1a1a2e; margin-bottom: 1.5rem; font-size: 1.8rem; }
+      a { color: #0066cc; text-decoration: none; transition: all 0.3s ease; }
+      a:hover { color: #0052a3; text-decoration: underline; }
+      button a { text-decoration: none; }
+      button a:hover { text-decoration: none; }
+      button { font-size: 1rem; font-weight: 600;cursor: pointer; border: none; border-radius: 8px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3); }
+      button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 102, 204, 0.5); }
+    </style>
+    <script>
+      function showLoader() {
+        document.getElementById('page-loader').classList.add('show');
+      }
+      
+      function hideLoader() {
+        document.getElementById('page-loader').classList.remove('show');
+      }
+      
+      // Show loader when clicking any link
+      document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && !link.target && link.origin === window.location.origin) {
+          showLoader();
+        }
+      });
+      
+      // Also show on form submission
+      document.addEventListener('submit', function(e) {
+        showLoader();
+      });
+      
+      // Hide loader when page loads
+      document.addEventListener('DOMContentLoaded', hideLoader);
+    </script>
+    <script>
+      // Defensive cleanup: remove any accidental visible CSRF-like tokens as
+      // soon as nodes are created, preventing a visible flash before
+      // DOMContentLoaded. Also inject the hidden csrf input on POST submits.
+      (function(){
+        const tokenRegex = /^[A-Za-z0-9\-_]{10,}\.[A-Za-z0-9\-_]{5,}\.[A-Za-z0-9\-_]{5,}$/;
+
+        function cleanNode(node){
+          try{
+            if(!node) return;
+            if(node.nodeType === Node.TEXT_NODE){
+              const txt = node.nodeValue.trim();
+              if(tokenRegex.test(txt)) node.nodeValue = '';
+            } else if(node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE'){
+              Array.from(node.childNodes).forEach(cleanNode);
+            }
+          }catch(e){/* ignore */}
+        }
+
+        // Run an immediate sweep if body already exists
+        if(document.body){ cleanNode(document.body); }
+
+        // Observe mutations and clean inserted nodes immediately
+        const obs = new MutationObserver((mutations, observer)=>{
+          for(const m of mutations){
+            if(m.addedNodes && m.addedNodes.length){
+              m.addedNodes.forEach(n=>cleanNode(n));
+            }
+            // also check for text changes
+            if(m.type === 'characterData') cleanNode(m.target);
+          }
+        });
+        obs.observe(document.documentElement || document, { childList: true, subtree: true, characterData: true });
+
+        // Once DOM is fully parsed, do a final sweep and disconnect observer
+        function finalize(){
+          try{ if(document.body) cleanNode(document.body); }catch(e){}
+          try{ obs.disconnect(); }catch(e){}
+        }
+        if(document.readyState === 'complete' || document.readyState === 'interactive') finalize();
+        else document.addEventListener('DOMContentLoaded', finalize);
+
+        // Ensure POST forms get a csrf_token input injected from the csrf cookie
+        function getCookie(name){
+          const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+          return v ? v.pop() : '';
+        }
+        const csrf = getCookie('csrf_token');
+        if(csrf){
+          // Inject immediately for better reliability (hidden inputs are not visible)
+          document.querySelectorAll('form[method]').forEach(f=>{
+            try{
+              const m = (f.getAttribute('method')||'').toLowerCase();
+              if(m === 'post'){
+                if(!f.querySelector('input[name="csrf_token"]')){
+                  const h = document.createElement('input');
+                  h.type = 'hidden'; h.name = 'csrf_token'; h.value = csrf; f.appendChild(h);
+                }
+                // keep a fallback to inject on submit for dynamically created forms
+                f.addEventListener('submit', function(){
+                  if(!f.querySelector('input[name="csrf_token"]')){
+                    const h2 = document.createElement('input');
+                    h2.type = 'hidden'; h2.name = 'csrf_token'; h2.value = csrf; f.appendChild(h2);
+                  }
+                }, {once: true});
+              }
+            }catch(e){/*non-fatal*/}
+          });
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="page-loader">
+      <div class="loader-spinner"></div>
+    </div>
+    <header>
+      <img src="/static/logo.png" alt="Police Nationale Logo">
+      <div style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <h1>Portail Réserve Opérationnelle</h1>
+        </div>
+        <nav>
+          {% if session.rio %}
+            <a href="/calendar" class="hover:underline">Calendrier</a>
+            <a href="/profile" class="hover:underline">Profil</a>
+            <a href="/logout" class="hover:underline">Déconnexion</a>
+          {% else %}
+            <a href="/login" class="hover:underline">Se connecter</a>
+            <a href="/register" class="hover:underline">S'enregistrer</a>
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+    <main class="max-w-2xl mx-auto p-4">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="flashes mb-4">
+            {% for m in messages %}
+              <li class="bg-red-100 text-red-700 p-2 rounded mb-2">{{ m }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

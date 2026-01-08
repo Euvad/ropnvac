@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Connexion Admin{% endblock %}
+{% block content %}
+<div style="display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 120px);">
+  <div style="background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 100%; max-width: 420px;">
+    <h2 style="text-align: center; color: #1a1a2e; margin-bottom: 2rem; font-size: 2rem;">🔐 Connexion Admin</h2>
+    <form method="post" action="/admin/login" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Nom d'utilisateur</label>
+        <input name="user" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;" onFocus="this.style.borderColor='#f5576c'; this.style.boxShadow='0 0 0 3px rgba(245,87,108,0.1)';" onBlur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+      </div>
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Mot de passe</label>
+        <input name="password" type="password" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;" onFocus="this.style.borderColor='#f5576c'; this.style.boxShadow='0 0 0 3px rgba(245,87,108,0.1)';" onBlur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+      </div>
+      <button type="submit" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.75rem 2rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(245,87,108,0.4);" onMouseOver="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(245,87,108,0.6)';" onMouseOut="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(245,87,108,0.4)';">Connexion</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

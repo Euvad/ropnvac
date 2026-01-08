@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Modifier Utilisateur{% endblock %}
+{% block content %}
+<div style="max-width: 500px; margin: 2rem auto;">
+  <h2 style="color: #1a1a2e; text-align: center;">✏️ Modifier Utilisateur</h2>
+  <form method="post" style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Prénom</label>
+      <input name="name" type="text" value="{{ user.name }}" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;" onFocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102,126,234,0.1)';" onBlur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Nom</label>
+      <input name="surname" type="text" value="{{ user.surname }}" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;" onFocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102,126,234,0.1)';" onBlur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">RIO</label>
+      <input name="rio" type="text" value="{{ user.rio }}" style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;" onFocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102,126,234,0.1)';" onBlur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Grade</label>
+      <input name="rank" type="text" value="{{ user.rank }}" style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;" onFocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102,126,234,0.1)';" onBlur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+    </div>
+    <div style="margin-bottom: 2rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 600;">Date Limite</label>
+      <input name="date_limit" type="date" value="{{ user.date_limit }}" style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;" onFocus="this.style.borderColor='#667eea'; this.style.boxShadow='0 0 0 3px rgba(102,126,234,0.1)';" onBlur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none';">
+    </div>
+    <button type="submit" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.75rem 2rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(102,126,234,0.4);" onMouseOver="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(102,126,234,0.6)';" onMouseOut="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(102,126,234,0.4)';">Enregistrer</button>
+  </form>
+
+  {% if avails %}
+    <div style="margin-top: 2rem; background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+      <h3 style="color: #1a1a2e; margin-bottom: 1rem;">Disponibilités</h3>
+      <ul style="list-style: none; padding: 0;">
+        {% for avail in avails %}
+          <li style="padding: 0.5rem 0; color: #666; border-bottom: 1px solid #e0e0e0;">{{ avail }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
