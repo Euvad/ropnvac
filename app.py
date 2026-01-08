@@ -128,23 +128,24 @@ def register():
 
         if not (name and surname and rio and password and rank and date_limit_str):
             flash('Tous les champs sont obligatoires')
-            return redirect(url_for('register'))
+            return render_template('register.html', name=name, surname=surname, rio=rio, rank=rank, date_limit=date_limit_str)
 
         if rank not in ('PA', 'GPX'):
             flash('Le grade doit être PA ou GPX')
-            return redirect(url_for('register'))
+            return render_template('register.html', name=name, surname=surname, rio=rio, rank=rank, date_limit=date_limit_str)
 
         # Validate password strength
         is_valid, error_msg = validate_password(password)
         if not is_valid:
             flash(error_msg)
-            return redirect(url_for('register'))
+            # Do not re-populate password for security reasons
+            return render_template('register.html', name=name, surname=surname, rio=rio, rank=rank, date_limit=date_limit_str)
 
         try:
             date_limit = datetime.strptime(date_limit_str, '%Y-%m-%d').date()
         except ValueError:
             flash('Format de date invalide')
-            return redirect(url_for('register'))
+            return render_template('register.html', name=name, surname=surname, rio=rio, rank=rank, date_limit=date_limit_str)
 
         existing = User.query.filter_by(rio=rio).first()
         if existing:
